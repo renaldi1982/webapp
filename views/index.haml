@@ -1,0 +1,26 @@
+#content
+  %table{:width => '100%', :border => 0}
+    %tr
+      %td
+        
+        #{@greetings}
+        
+        -if(is_logged_in?) 
+          %p Welcome!
+          %p #{session["username"].capitalize} 
+        
+        %br
+        It is my first Ruby website with Sinatra
+    %tr
+      %td
+        Enjoy your stay here and login if you have already have an account or sign up to create an account
+    %tr
+      %td
+        Here's the picture of me and my daughter 
+        %br
+        Please login to see my information and more pictures of my family
+    %tr
+      %td
+        %img{:src => 'public/images/profile_pic.jpg',:width => '50%', :height => '50%'}
+      
+         

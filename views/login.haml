@@ -1,0 +1,16 @@
+%h1='Please enter your login information'
+%h2='Login'
+%form{:action => '/login', :method => 'post'}
+  %table{:width => '50%', :border => 1}
+    %tr
+      %td='user name'
+      %td
+        %input{:type => 'text', :name => 'username', :autofocus => 'autofocus'}
+    %tr
+      %td='password'
+      %td
+        %input{:type => 'password', :name => 'password'}
+    %tr
+      %td        
+      %td
+        %input{:type => 'submit', :value => 'Login'}

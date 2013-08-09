@@ -1,0 +1,44 @@
+#content
+%h1 Please enter your information
+%h2 Signup form
+:javascript
+  function goBack()
+  {
+    window.history.back()
+    //alert('error');
+  }
+  
+%form{:action => '/signup', :method => 'post'}
+  %table{:width => '50%', :border => 1}
+    %tr
+      %td='User name'
+      %td
+        %input{:type => 'text', :name => 'username'}
+        %strong= '*'
+    %tr
+      %td='Password'
+      %td
+        %input{:type => 'password', :name => 'password'}
+        %strong= '*'
+    %tr
+      %td='Email'
+      %td
+        %input{:type => 'text', :name => 'email'}
+        %strong= '*'
+    %tr
+      %td='First name'
+      %td
+        %input{:type => 'text', :name => 'first_name'}        
+    %tr
+      %td='Last name'
+      %td
+        %input{:type => 'text', :name => 'last_name'}
+    %tr
+      %td  
+      %td{:align => 'middle'}  
+        %input{:type => 'submit', :value => 'Submit'}
+%end
+%p{:align => 'left'} * required field            
+       
+        
+  

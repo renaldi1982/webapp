@@ -1,0 +1,81 @@
+#content    
+  %body
+    %h1
+      == There are #{@users.length} users in your database
+    
+    %table{:width => '500px', :border => 1}
+      %tr
+        %td
+          %strong='ID'
+        %td
+          %strong='Username'
+        %td
+          %strong='Email address'
+        %td
+          %strong='First Name'
+        %td
+          %strong='Last Name'
+      -@users.each do |user|
+        %tr
+          %td=user.id
+          %td=user.username
+          %td=user.email
+          %td=user.first_name
+          %td=user.last_name
+          
+          
+    %form{:action => '/dbview', :method => 'post'}
+      %br
+      %br
+      %table{:width => '100%', :border => 0}
+        %tr
+          %td='Please insert id you want to delete/update'
+        %tr
+          %td
+            %input{:type => 'text', :name => 'id', :value => @update_selected ?"#{@id}" :""}
+          
+            %input{:type => 'radio', :name => 'radOptions', :value => 'delete', 
+            :checked => !@update_selected || nil}Delete
+           
+            %input{:type => 'radio', :name => 'radOptions', :value => 'update',
+            :checked => @update_selected || nil}Update
+           
+            %input{:type => 'submit', :value => 'Submit'}
+      %br
+      -if(!@er_message.nil?)
+        %b #{@er_message}
+      -if(@update_selected == true)
+        %br
+        %table{:width => '100%', :border => 0}
+          %tr
+            %td User name :
+            %td
+              %input{:type => 'text', :name => 'u_username', :value => "#{@update_user.username}"}
+          
+          %tr
+            %td Password :
+            %td
+              %input{:type => 'text', :name => 'u_password', :value => "#{@update_user.password}"}
+            
+            
+          %tr
+            %td Email :
+            %td
+              %input{:type => 'text', :name => 'u_email', :value => "#{@update_user.email}"}
+            
+          %tr
+            %td First name :
+            %td
+              %input{:type => 'text', :name => 'u_fName', :value => "#{@update_user.first_name}"}
+            
+          %tr
+            %td Last_name :
+            %td
+              %input{:type => 'text', :name => 'u_lName', :value => "#{@update_user.last_name}"}    
+                             
+    %end  
+            
+            
+    
+    
+            
