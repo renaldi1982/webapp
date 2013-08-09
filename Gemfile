@@ -6,4 +6,4 @@ gem 'sinatra'
 gem 'haml'
 gem 'rack'
 gem 'rack-mount'
-
+gem 'rack-flash'
