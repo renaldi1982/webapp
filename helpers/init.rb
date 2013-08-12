@@ -1,3 +1,2 @@
-require_relative './validation'
-require_relative './delete'
-require_relative './update'
+require_relative './session_auth'
+require_relative './query'

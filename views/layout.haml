@@ -12,25 +12,22 @@
         //Navigation bar
         %li
           %a{:href => '/'}Main Page
-        -if (!is_logged_in?)  
+        -if (!@authorized)  
           %li
             %a{:href => '/signup'}Sign up
           
-        - if (is_logged_in? and is_admin?)
+        - if (@authorized && @user.admin)
           %li        
             %a{:href => '/dbview'}View/Delete/Update members
           %li
             %a{:href => '/signup'}Add member
          
         %li
-          - if (!is_logged_in?)
+          - if (!@authorized)
             %a{:href => "/login"} Log In
           - else
             %a{:href => "/logout"} Log Out
             
-        //Check if there is error
-        - if (!@error_message.nil?)
-          .error== There was an error: #{@error_message}
         //Display message 
         - if (!@message.nil?)
           %br
