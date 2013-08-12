@@ -15,6 +15,8 @@
           %strong='First Name'
         %td
           %strong='Last Name'
+        %td
+          %strong='Admin Status'
       -@users.each do |user|
         %tr
           %td=user.id
@@ -22,6 +24,7 @@
           %td=user.email
           %td=user.first_name
           %td=user.last_name
+          %td=user.admin.to_s
           
           
     %form{:action => '/dbview', :method => 'post'}
@@ -32,7 +35,7 @@
           %td='Please insert id you want to delete/update'
         %tr
           %td
-            %input{:type => 'text', :name => 'id', :value => @update_selected ?"#{@id}" :""}
+            %input{:type => 'text', :name => 'id', :value => @update_selected ?"#{@mod_user.id}" :""}
           
             %input{:type => 'radio', :name => 'radOptions', :value => 'delete', 
             :checked => !@update_selected || nil}Delete
@@ -42,36 +45,40 @@
            
             %input{:type => 'submit', :value => 'Submit'}
       %br
-      -if(!@er_message.nil?)
-        %b #{@er_message}
       -if(@update_selected == true)
         %br
         %table{:width => '100%', :border => 0}
           %tr
             %td User name :
             %td
-              %input{:type => 'text', :name => 'u_username', :value => "#{@update_user.username}"}
+              %input{:type => 'text', :name => 'u_username', :value => "#{@mod_user.username}"}*
           
           %tr
             %td Password :
             %td
-              %input{:type => 'text', :name => 'u_password', :value => "#{@update_user.password}"}
+              %input{:type => 'text', :name => 'u_password', :value => "#{@mod_user.password}"}*
             
             
           %tr
             %td Email :
             %td
-              %input{:type => 'text', :name => 'u_email', :value => "#{@update_user.email}"}
+              %input{:type => 'text', :name => 'u_email', :value => "#{@mod_user.email}"}*
             
           %tr
             %td First name :
             %td
-              %input{:type => 'text', :name => 'u_fName', :value => "#{@update_user.first_name}"}
+              %input{:type => 'text', :name => 'u_fName', :value => "#{@mod_user.first_name}"}
             
           %tr
             %td Last_name :
             %td
-              %input{:type => 'text', :name => 'u_lName', :value => "#{@update_user.last_name}"}    
+              %input{:type => 'text', :name => 'u_lName', :value => "#{@mod_user.last_name}"}
+          
+          %tr
+            %td Admin status :
+            %td
+              %input{:type => 'checkbox', :name => 'u_admin', :checked => @mod_user.admin || nil}
+              
                              
     %end  
             

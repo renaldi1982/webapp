@@ -10,6 +10,7 @@ namespace :db do
       String :email
       String :first_name
       String :last_name
+      Boolean :admin
     end
   end
   
