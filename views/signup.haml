@@ -33,6 +33,13 @@
       %td='Last name'
       %td
         %input{:type => 'text', :name => 'last_name'}
+    
+    -if @authorized    
+      %tr
+        %td='Admin'
+        %td
+          %input{:type => 'checkbox', :name => 'admin'}
+        
     %tr
       %td  
       %td{:align => 'middle'}  

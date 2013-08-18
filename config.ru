@@ -1,5 +1,7 @@
-require './app'
+
 root = File.dirname(__FILE__) 
+require File.join(root, '/app')
+
 # setup our Rack routes to pass control on to Sinatra
 Routes = Rack::Mount::RouteSet.new do |set|
   # provides a route to the Main applet
