@@ -1,9 +1,12 @@
 module WebApplication
 
-  class WebApp < Sinatra::Base
+  class MainApp < Sinatra::Base
     #register sinatra validation method so we can use our helpers function
     register Sinatra::SessionAuth
     register Sinatra::Query
+    register Sinatra::ParamHashiefier
+    register Sinatra::Flash
+    helpers Sinatra::RedirectWithFlash
     
     #enable sessions for login autentication
     enable :sessions

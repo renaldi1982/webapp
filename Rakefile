@@ -22,4 +22,10 @@ namespace :db do
   task :rebuild => [:drop, :create] do
     puts "Database rebuilt!"
   end
+  
+  task :seed do
+    User.create(:username => "renaldi", :password => "5f4dcc3b5aa765d61d8327deb882cf99",
+    :email => "renaldi.sim@gmail.com", :first_name => "Renaldi", :last_name => "Kosim", :admin => true)
+  end
+    
 end

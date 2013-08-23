@@ -1,54 +1,64 @@
-module WebApplication
-  
-  class WebApp < Sinatra::Base
+module WebApplication  
+  class MainApp < Sinatra::Base
     
     get '/' do
-           
-      if authorize! 
-        @message = "Welcome #{current_user.username.capitalize}!"
+      if !authorized?      
         haml :index
       else
-        @message = "Welcome, please login or signup if you don't have an account yet"
-        haml :index
+        redirect '/index', :notice => "Welcome #{current_user.username.capitalize}"
       end
-      
     end    
     
-    get '/signup' do
-      #authorize request
+    get '/index' do
       authorize!
-      
-      haml :signup
-      
+      haml :index
+    end
+    
+    get '/signup' do
+      if !authorized?
+        haml :signup
+      elsif authorized? && !current_user.admin 
+        redirect '/', :error => "#{current_user.username}, you are not an admin"
+      elsif authorized? && current_user.admin
+        haml :signup, :notice => "Admin : #{current_user.username.capitalize}"
+      end              
     end
     
     post '/signup' do
-            
-      begin
-        User.create(:username => params['username'], :password => params['password'], :email => params['email'], 
-          :first_name => params['first_name'], :last_name => params['last_name'], :admin => false)
-        #redirect to main page if the sign up is succesful
-        puts "#{params['username']}, sign up sucessful"
-        
-        #authorize request
-        if !authorize!
-          @message = "Hi #{params['username'].capitalize}, you've been signed up. Please login"
-        else
-          @message = "#{params['username'].capitalize} has been added to the database"
-        end
-        haml :index
-        
+      #check if the user is admin
+      if !authorized?
+        begin
+          User.create(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+            :first_name => params.first_name, :last_name => params.last_name, :admin => false)
+          #redirect to main page if the sign up is succesful
+          puts "#{params['username']}, sign up sucessful"        
+          redirect '/', :notice => "You've been signed up, please login"
+          
         rescue Sequel::UniqueConstraintViolation
-        #stay in signup if there's exception
-        @message = "unique constraint on user name error"
-        puts 'unique constraint on user name error'
-        #authorize request
-        authorize!
-        haml :signup
-      
-      end
-      
-    end
+          #stay in signup if there's exception          
+          puts 'unique constraint on user name error'
+          redirect '/signup', :error => "Please insert another username"
+        end      
+      else
+        begin
+          if params.admin
+            admin = true
+          else
+            admin = false
+          end
+          User.create(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+            :first_name => params.first_name, :last_name => params.last_name, :admin => admin)
+          #redirect to main page if the sign up is succesful
+          puts "#{params['username']}, sign up sucessful"        
+          redirect '/dbview', :notice => "#{params.username.capitalize}, has been added"
+          
+        rescue Sequel::UniqueConstraintViolation
+          #stay in signup if there's exception          
+          puts 'unique constraint on user name error'
+          redirect '/signup', :error => "Please insert another username"
+        end      
+      end  
+    end                
         
   #end of our module class WebApp
   end

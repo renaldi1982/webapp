@@ -8,137 +8,104 @@ module Sinatra
       end
       
       def delete_user(id)
-        User.where(:id => params['id']).delete
+        puts "deleting user id = #{id}"
+        User.where(:id => params.id).delete
       end
       
       def get_user_info(id)
-        User.first(:id => params['id'])
+        User.first(:id => params.id)
       end
       
-      def update(id, u_username, u_password, u_email, u_fName, u_lName, u_admin)
-        
-        params['u_admin'] = false unless params['u_admin'] == 'on'
-        
-        begin
-            
-          @mod_user = get_user_info(params['id'])  
-          @mod_user.update(:username => params['u_username'], :password => params['u_password'], :email => params['u_email'], 
-              :first_name => params['u_fName'], :last_name => params['u_lName'], :admin => params['u_admin'])
-                    
-        end
-    
-      end
-        
+      def update(mod_user)               
+        begin                     
+          mod_user.update(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+              :first_name => params.first_name, :last_name => params.last_name, :admin => params.admin)                   
+        end    
+      end       
+       
     end
     
     def self.registered(app)
-    #include helpers define above
-    app.helpers Query::Helpers
-    app.helpers SessionAuth::Helpers
-    
-    app.get '/dbview' do
-      #check if user is authorized
-      authorize!
+      #include helpers define above
+      app.helpers Query::Helpers
+      app.helpers SessionAuth::Helpers
       
-      #get all users 
-      @users = get_users
-      haml :dbview
-    end
-    
-    app.post '/dbview' do
-             
-      #get radOptions value from /dbview
-      rad_val = params['radOptions']
-      #get id from /dbview
-      id = params['id'] 
-          
-      #get user information based on the id
-      @mod_user = get_user_info(id)
-    
-      #check if user exist, or check if id is null and user that will be deleted is not admin
-      if @mod_user == nil 
-          
-        @message = "User does not exist/id input is not right"
-        
-        #Check if authorized 
-        authorize!
-        haml :dbview
-             
-      else
-        #radio button delete selected
-        if rad_val == 'delete' 
-          #call method delete form helpers
-          if @mod_user.admin != true
-            delete_user(id)
-            @message = "#{@mod_user.username} has been deleted" 
+      route = app.to_s[/WebApplication::([A-Za-z]+)App/,1]
+      puts "printing route : #{route}"
+      
+      if route.downcase! == 'main'
+        app.get '/user' do
+          #check if user is authorized
+          authorize!
+          if current_user.admin
+            #get all users 
             @users = get_users
-            #Check if authorized 
-            authorize!
-            haml :dbview
+            haml :user
           else
-            @message = "There's error in deletion, make sure you insert the correct user ID(Note you can't delete admin)"
-            @users = get_users
-            #Check if authorized
-            authorize!
-            haml :dbview
-          #end deletion 
+            redirect '/', :error => "#{current_user.username.capitalize}, you are not an admin"
           end
-          
-        else         
-          
-          @update_selected = true
-          @users = get_users
-          
-          #check if id match user that we want to update and required fields are not empty
-          if params['u_username'] == nil 
-            
-            @update_selected = true
-            @users = get_users
-            
-            #Check if authorized
-            authorize!
-            haml :dbview
-              
-          else
-            if params['id'] != id || params['u_username'] == nil || params['u_password'] == nil || 
-              params['u_email'] == nil
-              
-              @message = "Please make sure that you want to update the right user, and all required fields are not empty"
-              
-              @update_selected = true
-              @users = get_users
-            
-              #Check if authorized
-              authorize!
-              haml :dbview
-              
+        end            
+        
+        #TODO fill this out
+        app.post '/user' do
+          #do deletion
+          if authorized? 
+            user = get_user_info(params.id)
+            if !user.admin 
+              delete_user(params.id) 
+              redirect '/user', :notice => "Account has been deleted"
             else
-              #call update from helpers
-              update(id, params['u_username'], params['u_password'], params['u_email'], params['u_fName'], params['u_lName'],
-              params['u_admin'])
-            
-              @update_selected = false
-              @users = get_users
-              @message = "Record ID: #{params['id']} has been updated"
-            
-              #Check if authorized
-              authorize!
-              haml :dbview
-               
-            end
-            
-          #end update   
-          end               
-              
-        #end delete/update  
+              redirect '/user', :notice => "Can't delete an admin, update the admin status first"
+            end    
+          else          
+            redirect '/', :error => "#{current_user.username.capitalize}, you are not an admin"
+          end                                        
+        #end of app.post '/dbview'  
         end
-          
-      #end check mod_user is nil      
-      end        
-     
-    #end of app.post '/dbview'  
-    end
-    
+      
+        app.get '/update_user_:id' do
+          puts "called"
+          #authorize
+          puts params.id
+          authorize!
+          if current_user.admin            
+            #get user info
+            @user = User[params.id]
+            haml :update_user
+          else
+            redirect '/', :error => "#{current_user.username.capitalize}, you are not an admin"  
+          end       
+        end
+        
+        #TODO fill this out
+        app.post '/update_user_:id' do
+          if current_user.admin
+            #get user to modified
+            mod_user = get_user_info(params.id)
+            if params.chk_pass
+              begin                     
+                mod_user.update(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+                  :first_name => params.first_name, :last_name => params.last_name, :admin => params.admin)                   
+              rescue Sequel::UniqueConstraintViolation
+                puts "Unique constrain violation"
+                redirect '/update_user_:id', :error => "Unique constraint violation"
+              end 
+            else
+              begin                     
+                mod_user.update(:username => params.username, :email => params.email, 
+                  :first_name => params.first_name, :last_name => params.last_name, :admin => params.admin)                   
+              rescue Sequel::UniqueConstraintViolation
+                puts "Unique constrain violation"
+                redirect '/update_user_:id', :error => "Unique constraint violation"
+              end    
+            end
+          else
+            redirect '/', :error => "{current_user.username.capitalize}, you are not an admin"  
+          end
+        end
+      
+      #end if route == main
+      end          
     #end self.registered(app)  
     end
     
