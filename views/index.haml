@@ -1,21 +1,19 @@
+
 #content
+  //Display message 
+  - if flash[:notice] 
+    %br
+    %b #{flash[:notice]}
   
-  %table{:width => '100%', :border => 0}
-    %tr
-      %td        
-                
-        %br
-        It is my first Ruby website with Sinatra
-    %tr
-      %td
-        Enjoy your stay here and login if you have already have an account or sign up to create an account
-    %tr
-      %td
-        Here's the picture of me and my daughter 
-        %br
-        Please login to see my information and more pictures of my family
-    %tr
-      %td
-        %img{:src => 'public/images/profile_pic.jpg',:width => '50%', :height => '50%'}
+  - if flash[:error]
+    %br
+    %b #{flash[:error]}
+
+  %p It is my first Ruby website with Sinatra. 
+  %p Enjoy your stay here and login if you have already have an account or sign up to create an account. 
+  %P Here's the picture of me and my daughter. Please login to see my information and more pictures of my family
+  %hr    
+  %img{:src => 'public/images/profile_pic.jpg',:width => '50%', :height => '50%'}
+  
       
          

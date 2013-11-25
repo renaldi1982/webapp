@@ -1,2 +1,16 @@
-#content
-==#{@inputUser} is trying to login
+#content  
+  %p Hello
+  %form{:action => './about', :method => 'POST'}    
+    %p Enter the first number
+    %br
+    %input{:type => 'text', :name => 'input1'}  
+    %p Enter the second number
+    %br 
+    %input{:type => 'text', :name => 'input2'}
+    %br
+    %input{:type => 'submit', :value => 'Add'}
+    
+    %p Result is :
+    %br
+    %p #{@result unless @result.nil?}
+    

@@ -1,0 +1,48 @@
+
+%hr
+%p Admin: #{current_user.username.capitalize} 
+%hr
+%form{:action => '/update_user', :method => 'post'}
+  #table
+    %table
+      %tr
+        %td User name :
+        %td
+          %input{:type => "text", :name => "username", :id => "username", :value => "#{@user.username}"}*
+          
+      %tr
+        %td Password :
+        %td
+          %input{:type => "text", :name => "password", :id => "password",
+           :disabled => "disabled", :value => "Old password"}*
+          %input{:type => "checkbox", :name => "chk_pass", :id => "chk_pass"}Check if you want to change the password
+                    
+      %tr
+        %td Email :
+        %td
+          %input{:type => "text", :name => "email", :value => "#{@user.email}"}*
+            
+      %tr
+        %td First name :
+        %td
+          %input{:type => "text", :name => "first_name", :value => "#{@user.first_name}"}
+             
+      %tr
+        %td Last_name :
+        %td
+          %input{:type => "text", :name => "last_name", :value => "#{@user.last_name}"}
+            
+      %tr
+        %td Admin status :
+        %td
+          %input{:type => "checkbox", :name => "admin", :checked => @user.admin || nil}
+                  
+      %tr
+        %td
+        %td
+          %input{:type => "submit", :name => "update", :value => "Update Account"}
+        
+        
+        
+        
+                          

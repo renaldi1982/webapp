@@ -1,0 +1,32 @@
+#content
+      
+  %hr    
+  %br
+  %form#chat_login{:action => "/chat/connect", :method => "POST"}
+    %fieldset
+      %legend="Email password"
+      %label{:for => "password_chat"}    
+      %input#password_chat{:type => "password", :name => "password_chat", :value => "R3n4l6i1982"}        
+      %br
+      %input#button_submit{:type => "submit", :value => "Submit"}  
+  %br
+  %form#chat_send{:action => "chat/send", :method => "POST"}  
+    #msg
+    %fieldset#field_chat{:disabled => "disabled"}
+      %legend="Chat Away..."
+      %label{:for => "text_chat"}
+      %textarea#text_chat{:name => "text_chat", :rows => "10", :cols => "50", :disabled => "disabled"}   
+      %br
+      %label{:for => "input_chat"}Message:
+      %input#input_chat{:type => "text", :name => "input_chat", :size => 50}
+      %br
+      %label{:for => "input_send"}Send to:
+      %input#input_send{:type => "text", :name => "input_send", :size => 50, :value => "rnolastname@uco.edu"}
+      %br
+      %input#button_send{:type => "submit", :value => "Send"}
+      %nbsp 
+      %input#button_clear{:type => "button", :value => "Clear chat"}
+      %nbsp 
+      %input#button_change{:type => "button", :value => "Change Recipient"}
+  %hr            
+  

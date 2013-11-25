@@ -10,15 +10,11 @@ module Sinatra
         User.first(:username => session[:user])
       end
       
-      def authorize!
-        return false unless authorized? && current_user
-        @authorized = authorized?
-        @user = current_user
+      def authorize!        
+        redirect '/login' unless authorized? && current_user
       end
       
-      def logout!
-        #session[:authorized] = false
-        #session[:user] = nil
+      def logout!        
         session.clear
       end 
     #end helpers  
@@ -26,35 +22,46 @@ module Sinatra
     
     def self.registered(app)
       app.helpers SessionAuth::Helpers
-     
-      app.get '/login' do
-        haml :login
-      end
+      app.helpers Sinatra::RedirectWithFlash
       
-      app.post '/login' do
-        if user = User.first(:username => params['username'], :password => params['password'])
-          session[:authorized] = true
-          session[:user] = user.username
+      route = app.to_s[/WebApplication::([A-Za-z]+)App/,1]
+      puts "printing route : #{route}"
+      if route.downcase! == 'main'
           
-          puts "#{user.username} is logged in!"
-          redirect "/"
-        else
-          @message = "Invalid login details"
-          puts 'invalid login details!'
+        app.get '/login' do
           haml :login
         end
-      end
       
-      app.get '/logout' do
-        logout!
-        @message = "See you soon!!"
-        haml :index
-      end
-      
+        app.post '/login' do          
+          if user = User.first(:username => params.username, :password => Digest::MD5.hexdigest(params.password))
+            session[:authorized] = true
+            session[:user] = user.username            
+            puts "#{user.username} is logged in!"
+            redirect "/", :notice => "Welcome #{user.username.capitalize}"
+          else          
+            puts 'invalid login details!'
+            redirect '/login', :error => "Invalid login details"
+          end
+        end        
+        
+        app.get '/logout' do
+          logout!
+          redirect '/index', :notice => "See you and have a nice day"          
+        end
+      else
+        app.get '/login' do
+          redirect '/login'
+        end  
+        
+        app.get '/logout' do
+          logout!
+          redirect '/index', :notice => "See you and have a nice day"        
+        end
+      end      
+    #end self.registered  
     end
                  
   #end module SessionAuth  
   end
-  register SessionAuth
 #end module Sinatra  
 end

@@ -3,43 +3,44 @@
   #wrapper
     #header
       %head
-        %title Renaldi's homepage
-        %link(rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css")  
-        %link(rel="stylesheet" href="public/styles.css")  
-      %h1 Welcome to my home page
-    %body
-      %ul.horizontal
-        //Navigation bar
-        %li
-          %a{:href => '/'}Main Page
-        -if (!@authorized)  
+        //%link{:rel => "stylesheet", :href => "http://fonts.googleapis.com/css?family=Raleway:600"}    
+        %link{:rel => "stylesheet", :href => "public/css/styles.css"}           
+        %script{:src => "http://rightjs.org/hotlink/right.js"}
+        %script{:type => "text/javascript", :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"}
+        %script{:type => "text/javascript", :src => "public/js/main.js"}     
+        %script{:type => "text/javascript", :src => "public/js/chat.js"}            
+        %title Renaldi's homepage                
+        %h1 Welcome to my home page  
+    #body
+      %body      
+        %ul{:class => "sonarmenu"}
+          //Navigation bar
           %li
-            %a{:href => '/signup'}Sign up
-          
-        - if (@authorized && @user.admin)
-          %li        
-            %a{:href => '/dbview'}View/Delete/Update members
-          %li
-            %a{:href => '/signup'}Add member
-         
-        %li
-          - if (!@authorized)
-            %a{:href => "/login"} Log In
-          - else
-            %a{:href => "/logout"} Log Out
+            %a{:href => "/"}Main Page
+          -if (!authorized?)  
+            %li
+              %a{:href => "/signup"}Sign up
+          -else
+            %li
+              %a{:href => "/chat/#{current_user.id}"} Chat
             
-        //Display message 
-        - if (!@message.nil?)
-          %br
-          %b #{@message}
-                   
-      #container
-        =yield
-    %br 
+          - if (authorized? && current_user.admin)
+            %li        
+              %a{:href => "/user"}Manage Accounts          
+           
+          %li
+            - if (!authorized?)
+              %a{:href => "/login"} Log In
+            - else
+              %a{:href => "/logout"} Log Out                        
+                     
+        %container{:class => "content"}
+          =yield
+      %br 
     
     #footer
       %ol
         WEBMASTER 
         %br
-        %a{:href => 'mailto:renaldi.sim@gmail.com'} Ray Renaldi
+        %a{:href => "mailto:renaldi.sim@gmail.com"} Ray Renaldi
         
