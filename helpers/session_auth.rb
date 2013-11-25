@@ -32,7 +32,11 @@ module Sinatra
           haml :login
         end
       
+<<<<<<< HEAD
         app.post '/login' do          
+=======
+        app.post '/login' do
+>>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
           if user = User.first(:username => params.username, :password => Digest::MD5.hexdigest(params.password))
             session[:authorized] = true
             session[:user] = user.username            

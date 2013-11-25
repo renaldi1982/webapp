@@ -3,12 +3,19 @@
   #wrapper
     #header
       %head
+<<<<<<< HEAD
         //%link{:rel => "stylesheet", :href => "http://fonts.googleapis.com/css?family=Raleway:600"}    
         %link{:rel => "stylesheet", :href => "public/css/styles.css"}           
         %script{:src => "http://rightjs.org/hotlink/right.js"}
         %script{:type => "text/javascript", :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"}
         %script{:type => "text/javascript", :src => "public/js/main.js"}     
         %script{:type => "text/javascript", :src => "public/js/chat.js"}            
+=======
+        //%link{:rel => 'stylesheet', :href => "http://fonts.googleapis.com/css?family=Raleway:600"}    
+        %link{:rel => 'stylesheet', :href => "public/css/styles.css"}           
+        %script{:type => 'text/javascript', :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"}
+        %script{:type => 'text/javascript', :src => "public/js/main.js"}          
+>>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
         %title Renaldi's homepage                
         %h1 Welcome to my home page  
     #body
@@ -16,6 +23,7 @@
         %ul{:class => "sonarmenu"}
           //Navigation bar
           %li
+<<<<<<< HEAD
             %a{:href => "/"}Main Page
           -if (!authorized?)  
             %li
@@ -27,6 +35,16 @@
           - if (authorized? && current_user.admin)
             %li        
               %a{:href => "/user"}Manage Accounts          
+=======
+            %a{:href => '/'}Main Page
+          -if (!authorized?)  
+            %li
+              %a{:href => '/signup'}Sign up
+            
+          - if (authorized? && current_user.admin)
+            %li        
+              %a{:href => '/user'}Manage Accounts          
+>>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
            
           %li
             - if (!authorized?)

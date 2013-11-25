@@ -12,6 +12,7 @@ module WebApplication
     get '/index' do
       authorize!
       haml :index
+<<<<<<< HEAD
     end
     
     get '/signup' do
@@ -69,7 +70,55 @@ module WebApplication
       #puts params.input2
       @result = params.input1.to_i + params.input2.to_i
       haml :about
+=======
     end
+    
+    get '/signup' do
+      if !authorized?
+        haml :signup
+      elsif authorized? && !current_user.admin 
+        redirect '/', :error => "#{current_user.username}, you are not an admin"
+      elsif authorized? && current_user.admin
+        haml :signup, :notice => "Admin : #{current_user.username.capitalize}"
+      end              
+>>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
+    end
+    
+    post '/signup' do
+      #check if the user is admin
+      if !authorized?
+        begin
+          User.create(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+            :first_name => params.first_name, :last_name => params.last_name, :admin => false)
+          #redirect to main page if the sign up is succesful
+          puts "#{params['username']}, sign up sucessful"        
+          redirect '/', :notice => "You've been signed up, please login"
+          
+        rescue Sequel::UniqueConstraintViolation
+          #stay in signup if there's exception          
+          puts 'unique constraint on user name error'
+          redirect '/signup', :error => "Please insert another username"
+        end      
+      else
+        begin
+          if params.admin
+            admin = true
+          else
+            admin = false
+          end
+          User.create(:username => params.username, :password => Digest::MD5.hexdigest(params.password), :email => params.email, 
+            :first_name => params.first_name, :last_name => params.last_name, :admin => admin)
+          #redirect to main page if the sign up is succesful
+          puts "#{params['username']}, sign up sucessful"        
+          redirect '/dbview', :notice => "#{params.username.capitalize}, has been added"
+          
+        rescue Sequel::UniqueConstraintViolation
+          #stay in signup if there's exception          
+          puts 'unique constraint on user name error'
+          redirect '/signup', :error => "Please insert another username"
+        end      
+      end  
+    end                
         
   #end of our module class WebApp
   end

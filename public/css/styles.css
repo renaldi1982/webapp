@@ -51,7 +51,11 @@
 		margin: 10px 20px;
 		text-transform: uppercase;
 		font-family: 'Raleway', sans-serif; /* font style (uses Google fonts) */
+<<<<<<< HEAD
 		font-size: 18px; /* font size */
+=======
+		font-size: 22px; /* font size */
+>>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
 		letter-spacing: 2px; /* letter spacing */
 		border-bottom: 2px solid transparent; /* Bottom border style */
 	}
