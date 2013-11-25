@@ -12,7 +12,6 @@ module WebApplication
     get '/index' do
       authorize!
       haml :index
-<<<<<<< HEAD
     end
     
     get '/signup' do
@@ -70,7 +69,6 @@ module WebApplication
       #puts params.input2
       @result = params.input1.to_i + params.input2.to_i
       haml :about
-=======
     end
     
     get '/signup' do
@@ -81,7 +79,6 @@ module WebApplication
       elsif authorized? && current_user.admin
         haml :signup, :notice => "Admin : #{current_user.username.capitalize}"
       end              
->>>>>>> 639cc153cc5157a8527b2f6e2934d32995abad57
     end
     
     post '/signup' do
